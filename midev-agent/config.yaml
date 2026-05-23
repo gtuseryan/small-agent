@@ -1,0 +1,57 @@
+# MiDevAgent 配置文件
+# 基于小米预训练基础大模型的智能研发协作Agent系统
+
+llm:
+  api_key: ${LLM_API_KEY}
+  base_url: ${LLM_BASE_URL:-https://api.xiaomi.com/v1}
+  model_name: ${LLM_MODEL_NAME:-xiaomi-pretrained-base}
+  temperature: 0.1
+  max_tokens: 4096
+
+embedding:
+  api_key: ${EMBEDDING_API_KEY}
+  base_url: ${EMBEDDING_BASE_URL:-https://api.xiaomi.com/v1}
+  model_name: ${EMBEDDING_MODEL_NAME:-xiaomi-embedding}
+
+agent:
+  max_iterations: 10
+  verbose: true
+  system_prompt: |
+    你是一个智能研发协作Agent（MiDevAgent），运行在小米预训练基础大模型之上。
+    你的目标是帮助开发者高效完成代码审查、文档生成和技术问答等研发任务。
+
+    核心能力：
+    1. 代码分析：理解代码逻辑、发现潜在Bug、提出优化建议
+    2. 文档生成：根据代码自动生成API文档、README、变更日志
+    3. 知识检索：从知识库中检索相关技术文档和历史决策
+
+    工作原则：
+    - 使用 ReAct 模式：先思考(Thought) → 再行动(Action) → 观察结果(Observation)
+    - 遇到不确定的信息，优先使用工具检索而非猜测
+    - 代码建议需给出具体行号和修改方案
+    - 文档生成需保持格式规范、内容完整
+
+rag:
+  chunk_size: 500
+  chunk_overlap: 50
+  persist_directory: ./data/chroma_db
+  collection_name: midev_knowledge
+
+tools:
+  # 代码分析工具
+  - name: analyze_code
+    description: 分析指定代码文件的逻辑结构、潜在问题和优化建议
+  - name: review_diff
+    description: 审查代码变更（diff），识别Bug、安全漏洞和规范问题
+  - name: generate_doc
+    description: 根据代码自动生成API文档或README
+  # 知识检索工具
+  - name: search_knowledge
+    description: 从研发知识库中检索相关技术文档
+  - name: index_document
+    description: 将文档添加到知识库索引中
+  # 系统工具
+  - name: read_file
+    description: 读取本地文件内容
+  - name: list_directory
+    description: 列出目录结构
