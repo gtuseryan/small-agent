@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+data/chroma_db/
+*.egg-info/
+dist/
+build/
+.idea/
+.vscode/
+*.swp
+*.swo
